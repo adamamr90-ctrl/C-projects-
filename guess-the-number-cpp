@@ -1,0 +1,177 @@
+#include <iostream>
+#include <ctime>
+#include <cstdlib>
+
+using namespace std;
+
+// Returns a random message when the guess is too high
+string get_high()
+{
+    string messages[] =
+    {
+        "Oops! That's too high.",
+        "Try something lower.",
+        "Nope, bring it down a bit.",
+        "Too high! Aim lower."
+    };
+
+    return messages[rand() % 4];
+}
+
+// Returns a random message when the guess is too low
+string get_low()
+{
+    string messages[] =
+    {
+        "Too low. Go higher.",
+        "Not quite — guess higher.",
+        "You're below the number. Try a bigger one.",
+        "Nope, that's too low."
+    };
+
+    return messages[rand() % 4];
+}
+
+// Returns a random winning message
+string get_win()
+{
+    string messages[] =
+    {
+        "Boom! Nailed it!",
+        "You got it — nice job!",
+        "Correct! You're on fire!",
+        "Well done, that's the number!"
+    };
+
+    return messages[rand() % 4];
+}
+
+int main()
+{
+    // Seed the random number generator
+    srand(time(0));
+
+    char play_again;
+    int score = 0;
+    string name;
+
+    // Ask for the player's name
+    cout << "Enter your name: ";
+    cin >> name;
+
+    do
+    {
+        int difficulty;
+        int max_range;
+        int count;
+        int points;
+
+        // Display game title and difficulty options
+        cout << "\n===== Guess The Number Game =====\n";
+        cout << "Choose a difficulty level:\n";
+        cout << "1. Easy   (1 - 10)\n";
+        cout << "2. Medium (1 - 50)\n";
+        cout << "3. Hard   (1 - 100)\n";
+        cout << "Your choice: ";
+
+        cin >> difficulty;
+
+        // Validate difficulty input
+        if (difficulty < 1 || difficulty > 3)
+        {
+            cout << "Invalid choice. Please enter 1, 2, or 3.\n";
+            continue;
+        }
+
+        // Set game settings based on difficulty
+        if (difficulty == 1)
+        {
+            max_range = 10;
+            count = 3;
+            points = 1;
+        }
+        else if (difficulty == 2)
+        {
+            max_range = 50;
+            count = 5;
+            points = 3;
+        }
+        else
+        {
+            max_range = 100;
+            count = 8;
+            points = 5;
+        }
+
+        // Generate a random number
+        int num = rand() % max_range + 1;
+
+        int guess;
+
+        cout << "You only have " << count << " tries.\n";
+
+        int tries = 0;
+
+        // Main guessing loop
+        for (int i = 0; i < count; i++)
+        {
+            tries++;
+
+            cout << "Enter your guess: ";
+            cin >> guess;
+
+            // Check if the guess is correct
+            if (guess == num)
+            {
+                cout << get_win() << "\n";
+                break;
+            }
+
+            // Give feedback if the guess is too high
+            else if (guess > num)
+            {
+                cout << get_high() << "\n";
+            }
+
+            // Give feedback if the guess is too low
+            else
+            {
+                cout << get_low() << "\n";
+            }
+        }
+
+        // If the player failed to guess the number
+        if (guess != num)
+        {
+            cout << "Sorry, you ran out of tries.\n";
+            cout << "The number was " << num << ".\n";
+        }
+
+        // If the player guessed correctly
+        else
+        {
+            cout << "You guessed the number in " << tries << " tries!\n";
+
+            score += points;
+
+            cout << "You earned " << points << " point(s) this round.\n";
+            cout << "Your score is now " << score << ".\n";
+        }
+
+        // Ask the player if they want to play again
+        cout << "\nDo you want to play again? (y/n): ";
+        cin >> play_again;
+
+        if (play_again == 'y' || play_again == 'Y')
+        {
+            cout << "\n====== New Game ======\n";
+        }
+
+    } while (play_again == 'y' || play_again == 'Y');
+
+    // Final message before exiting
+    cout << "\nYour final score was: " << score << "\n";
+    cout << "Thanks for playing, " << name << "!\n";
+
+    return 0;
+}
